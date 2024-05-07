@@ -50,7 +50,8 @@ class _HomeState extends State<Home> {
 
   final server = "http://localhost/RMS_API/api/recipes/";
 
-  Future<void> addRecipe(String name, String description, String instruction, String ingredients, String category_id, File? image) async {
+  Future<void> addRecipe(String name, String description, String instruction,
+      String ingredients, String category_id, File? image) async {
     final url = server + "recipe.php";
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -76,15 +77,16 @@ class _HomeState extends State<Home> {
     loadRecipeList();
   }
 
-  Future<void> editRecipe(String id, String name, String description, String instruction, String ingredients, String category_id) async {
+  Future<void> editRecipe(String id, String name, String description,
+      String instruction, String ingredients, String category_id) async {
     final url = server + "recipe.php";
     Map<String, dynamic> data = {
-      "recipe_id" : id,
-      "recipe_name" : name,
-      "description" : description,
-      "instructions" : instruction,
-      "ingredients" : ingredients,
-      "category_id" : category_id
+      "recipe_id": id,
+      "recipe_name": name,
+      "description": description,
+      "instructions": instruction,
+      "ingredients": ingredients,
+      "category_id": category_id
     };
     final response = await http.put(
         Uri.parse(url),
@@ -113,8 +115,12 @@ class _HomeState extends State<Home> {
       if (query.isNotEmpty) {
         // Filter recipes based on the query
         _filteredRecipe = _recipe.where((recipe) =>
-              recipe['recipe_name'].toString().toLowerCase().contains(query.toLowerCase()) ||
-              recipe['category']['category_name'].toString().toLowerCase().contains(query.toLowerCase())).toList();;
+        recipe['recipe_name'].toString().toLowerCase().contains(
+            query.toLowerCase()) ||
+            recipe['category']['category_name'].toString()
+                .toLowerCase()
+                .contains(query.toLowerCase())).toList();
+        ;
       } else {
         // If query is empty, show all recipes
         _filteredRecipe = _recipe;
@@ -135,7 +141,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<void> deleteRecipe(String index) async{
+  Future<void> deleteRecipe(String index) async {
     final url = server + "recipe.php?recipe_id=$index";
 
     final response = await http.delete(
@@ -146,16 +152,16 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> Favorite(String id, String favorite) async {
-    if(favorite == "0"){
+    if (favorite == "0") {
       favorite = "1";
-    }else{
+    } else {
       favorite = "0";
     }
 
     final url = server + "favorite.php";
     Map<String, dynamic> data = {
-      "recipe_id" : id,
-      "favorite" : favorite
+      "recipe_id": id,
+      "favorite": favorite
     };
     final response = await http.put(
         Uri.parse(url),
@@ -172,10 +178,10 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  void showInstruction(String name, String instruction, String ingredients){
+  void showInstruction(String name, String instruction, String ingredients) {
     showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return AlertDialog(
           title: Text('$name'),
           content: Column(
@@ -302,7 +308,8 @@ class _HomeState extends State<Home> {
                         width: 200, // Set the desired width
                         child: Image.file(
                           _image!,
-                          fit: BoxFit.cover, // Ensure the image fills the container without distortion
+                          fit: BoxFit
+                              .cover, // Ensure the image fills the container without distortion
                         ),
                       ),
                   ],
@@ -321,7 +328,9 @@ class _HomeState extends State<Home> {
                 ),
                 TextButton(
                   onPressed: () {
-                    addRecipe(_recipeName.text, _description.text, _instruction.text, _ingredients.text, _selectedCategory!, _image,);
+                    addRecipe(
+                      _recipeName.text, _description.text, _instruction.text,
+                      _ingredients.text, _selectedCategory!, _image,);
                     _recipeName.text = "";
                     _description.text = "";
                     _instruction.text = "";
@@ -343,7 +352,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void showEditRecipe(String id, String name, String description, String instruction, String ingredients, String selectedCategory){
+  void showEditRecipe(String id, String name, String description,
+      String instruction, String ingredients, String selectedCategory) {
     _editRecipeName.text = name;
     _editDescription.text = description;
     _editIngredients.text = ingredients;
@@ -422,7 +432,9 @@ class _HomeState extends State<Home> {
             ),
             TextButton(
               onPressed: () {
-                editRecipe(id, _editRecipeName.text, _editDescription.text, _editInstruction.text, _editIngredients.text, selectedCategory);
+                editRecipe(id, _editRecipeName.text, _editDescription.text,
+                    _editInstruction.text, _editIngredients.text,
+                    selectedCategory);
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text(
@@ -436,10 +448,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void confirmDialog(String index){
+  void confirmDialog(String index) {
     showDialog(
         context: context,
-        builder: (BuildContext context){
+        builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("Delete Task"),
             content: const Text("Are you sure you want to delete this task?"),
@@ -476,7 +488,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     int crossAxisCount = 1;
     if (screenWidth > 600) {
@@ -485,122 +500,162 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Recipe Management System"),
+        title: Text(
+          "Recipe Management System",
+          style: TextStyle(
+            fontFamily: 'YourFontFamily',
+            // Replace 'YourFontFamily' with your desired font family
+            fontWeight: FontWeight.bold,
+            // You can adjust the font weight as needed
+            fontSize: 20, // You can adjust the font size as needed
+            // You can add more text style properties as needed
+          ),
+        ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.search),
-              ),
-              onChanged: (value) {
-                searchRecipe(value);
-              },
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://img.freepik.com/free-photo/top-view-different-snacks-fruits-crackers_140725-57543.jpg?size=626&ext=jpg&ga=GA1.1.1395880969.1709510400&semt=ais.jpg'),
+            fit: BoxFit.cover,
+            alignment: Alignment.center, // Center the image
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height / 2),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.0),
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                // Adjust the opacity as needed
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  border: InputBorder.none,
+                  suffixIcon: Icon(Icons.search),
                 ),
-                itemCount: _filteredRecipe.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    elevation: 4,
-                    margin: EdgeInsets.all(0),
-                    child: ListTile(
-                      title: Text(
-                        "${index + 1}. ${_filteredRecipe[index]['recipe_name']}",
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 50, // Adjust height as needed
-                            child: Text(
-                              _filteredRecipe[index]['description'],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Category: ${_filteredRecipe[index]['category']['category_name']}",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              String id = _filteredRecipe[index]['recipe_id'];
-                              String favorite = _filteredRecipe[index]['favorite'];
-                              Favorite(id, favorite);
-                            },
-                            icon: _filteredRecipe[index]['favorite'] == "1" ?
-                            Icon(Icons.star, color: Colors.blue) :
-                            Icon(Icons.star_border_outlined, color: Colors.grey),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              String category = _filteredRecipe[index]['category']['category_id'];
-                              String id = _filteredRecipe[index]['recipe_id'];
-                              String name = _filteredRecipe[index]['recipe_name'];
-                              String desc = _filteredRecipe[index]['description'];
-                              String instruction = _filteredRecipe[index]['instructions'];
-                              String ingridients = _filteredRecipe[index]['ingredients'];
-                              showEditRecipe(id,name,desc,instruction,ingridients,category);
-                            },
-                            icon: Icon(Icons.edit_outlined, color: Colors.green),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              String id = _filteredRecipe[index]['recipe_id'];
-                              confirmDialog(id);
-                            },
-                            icon: Icon(Icons.delete_outline, color: Colors.red),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              String name = _filteredRecipe[index]['recipe_name'];
-                              String instruction = _filteredRecipe[index]['instructions'];
-                              String ingredients = _filteredRecipe[index]['ingredients'];
-                              showInstruction(name, instruction, ingredients);
-                            },
-                            icon: Icon(Icons.menu_book_outlined, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                onChanged: (value) {
+                  searchRecipe(value);
                 },
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: MediaQuery
+                        .of(context)
+                        .size
+                        .width /
+                        (MediaQuery
+                            .of(context)
+                            .size
+                            .height / 2),
+                  ),
+                  itemCount: _filteredRecipe.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 4,
+                      margin: EdgeInsets.all(0),
+                      child: ListTile(
+                        title: Text(
+                          "${index +
+                              1}. ${_filteredRecipe[index]['recipe_name']}",
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 50, // Adjust height as needed
+                              child: Text(
+                                _filteredRecipe[index]['description'],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Category: ${_filteredRecipe[index]['category']['category_name']}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                String id = _filteredRecipe[index]['recipe_id'];
+                                String favorite = _filteredRecipe[index]['favorite'];
+                                Favorite(id, favorite);
+                              },
+                              icon: _filteredRecipe[index]['favorite'] == "1" ?
+                              Icon(Icons.star, color: Colors.blue) :
+                              Icon(Icons.star_border_outlined,
+                                  color: Colors.grey),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                String category = _filteredRecipe[index]['category']['category_id'];
+                                String id = _filteredRecipe[index]['recipe_id'];
+                                String name = _filteredRecipe[index]['recipe_name'];
+                                String desc = _filteredRecipe[index]['description'];
+                                String instruction = _filteredRecipe[index]['instructions'];
+                                String ingridients = _filteredRecipe[index]['ingredients'];
+                                showEditRecipe(
+                                    id, name, desc, instruction, ingridients,
+                                    category);
+                              },
+                              icon: Icon(
+                                  Icons.edit_outlined, color: Colors.green),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                String id = _filteredRecipe[index]['recipe_id'];
+                                confirmDialog(id);
+                              },
+                              icon: Icon(
+                                  Icons.delete_outline, color: Colors.red),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                String name = _filteredRecipe[index]['recipe_name'];
+                                String instruction = _filteredRecipe[index]['instructions'];
+                                String ingredients = _filteredRecipe[index]['ingredients'];
+                                showInstruction(name, instruction, ingredients);
+                              },
+                              icon: Icon(Icons.menu_book_outlined,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showAddRecipe();
         },
         child: Icon(Icons.add),
+        backgroundColor: Colors.white,
       ),
     );
   }
